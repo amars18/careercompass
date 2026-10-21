@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Compass | Alumni Pathways</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#2563eb',
+              600: '#1d4ed8',
+              700: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar for modals & sidebars */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+  <!-- TOP HEADER / NAVIGATION -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('college-selection')">
+        <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md shadow-blue-500/20 flex items-center justify-center">
+          <i class="fa-solid fa-compass text-xl"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-lg sm:text-xl text-slate-900 tracking-tight flex items-center gap-2">
+            CareerCompass
+            <span class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full font-semibold border border-blue-200">Prototype</span>
+          </h1>
+          <p class="text-xs text-slate-500 hidden sm:block">Alumni Career Guidance & Blueprint Navigator</p>
+        </div>
+      </div>
+
+      <!-- Quick Nav Links -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <button onclick="switchView('college-selection')" class="text-xs sm:text-sm font-medium text-slate-600 hover:text-blue-600 transition flex items-center gap-1.5 px-3 py-1.5 rounded-lg hover:bg-slate-100">
+          <i class="fa-solid fa-building-columns"></i>
+          <span>Colleges</span>
+        </button>
+        <button onclick="openHelpModal()" class="text-xs sm:text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>About</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- BREADCRUMB / VIEW INDICATOR -->
+    <div id="breadcrumb-container" class="mb-6 flex items-center text-sm text-slate-500 space-x-2 hidden">
+      <button onclick="switchView('college-selection')" class="hover:text-blue-600 flex items-center gap-1">
+        <i class="fa-solid fa-house text-xs"></i>
+        <span>Home</span>
+      </button>
+      <span>/</span>
+      <span id="breadcrumb-current" class="font-medium text-slate-800">M.S. Ramaiah University</span>
+    </div>
+
+    <!-- VIEW 1: COLLEGE SELECTION VIEW -->
+    <section id="view-colleges" class="space-y-8 animate-fadeIn">
+      <!-- HERO BANNER -->
+      <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-2xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-10 text-white">
+          <i class="fa-solid fa-graduation-cap text-[220px]"></i>
+        </div>
+        <div class="max-w-2xl relative z-10">
+          <span class="inline-block bg-blue-500/30 text-blue-200 text-xs font-semibold px-3 py-1 rounded-full border border-blue-400/30 mb-3">
+            🎯 Real Alumni Roadmaps
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-3 leading-tight">
+            Discover How Your Seniors Cracked Tier-1 Roles & Tech Careers
+          </h2>
+          <p class="text-blue-100 text-sm sm:text-base leading-relaxed mb-6">
+            Select your university to view verified alumni profiles, B.Tech year-by-year learning roadmaps, programming skills, and interview tips.
+          </p>
+          
+          <button onclick="fetchColleges()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-xl transition shadow-lg shadow-blue-500/30 flex items-center gap-2">
+            <i class="fa-solid fa-list-ul"></i>
+            <span>Browse All Colleges</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- COLLEGE LIST CONTROLS -->
+      <div id="college-list-section" class="pt-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h3 class="text-xl font-bold text-slate-900">Partner Universities & Colleges</h3>
+            <p class="text-sm text-slate-500">Click on a college to explore its alumni career pathways.</p>
+          </div>
+          
+          <!-- Search Bar -->
+          <div class="relative w-full sm:w-72">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+            <input type="text" id="college-search" oninput="filterColleges()" placeholder="Search college name..." class="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition">
+          </div>
+        </div>
+
+        <!-- COLLEGES GRID -->
+        <div id="colleges-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Featured College: M.S. Ramaiah University -->
+          <div onclick="selectCollege('msruas')" class="bg-white rounded-2xl border-2 border-blue-500/80 p-6 shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-1 relative group overflow-hidden">
+            <div class="absolute top-0 right-0 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-bl-lg">
+              Featured Target
+            </div>
+            <div class="flex items-start gap-4 mb-4">
+              <div class="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold flex-shrink-0">
+                <i class="fa-solid fa-university"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 group-hover:text-blue-600 transition text-base sm:text-lg leading-snug">
+                  M.S. Ramaiah University of Applied Sciences (MSRUAS)
+                </h4>
+                <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                  <i class="fa-solid fa-location-dot text-rose-500"></i> Peenya / Mathikere, Bengaluru
+                </p>
+              </div>
+            </div>
+            
+            <p class="text-xs text-slate-600 mb-4 line-clamp-2">
+              Leading private university specializing in Engineering, Data Science, Product, and AI disciplines with rich placement records.
+            </p>
+
+            <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs">
+              <span class="text-slate-500 font-medium">
+                <strong class="text-blue-600 font-semibold">3 Active</strong> Alumni Roadmaps
+              </span>
+              <span class="text-blue-600 font-semibold group-hover:translate-x-1 transition flex items-center gap-1">
+                Explore Alumni <i class="fa-solid fa-arrow-right text-xs"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Dummy College 1: RVCE -->
+          <div onclick="showNotification('Sample demo configured for M.S. Ramaiah University. Click MSRUAS to view full pathways!')" class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition cursor-pointer group">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 text-2xl font-bold flex-shrink-0">
+                <i class="fa-solid fa-school"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 group-hover:text-blue-600 transition text-base leading-snug">
+                  RV College of Engineering (RVCE)
+                </h4>
+                <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                  <i class="fa-solid fa-location-dot text-rose-500"></i> Mysore Road, Bengaluru
+                </p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 mb-4">
+              Top autonomous engineering college in Karnataka known for strong placement statistics across core and IT.
+            </p>
+            <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
+              <span>18 Alumni Profiles</span>
+              <span class="text-slate-400 font-medium group-hover:text-blue-600 flex items-center gap-1">
+                View <i class="fa-solid fa-arrow-right text-xs"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Dummy College 2: BMSCE -->
+          <div onclick="showNotification('Sample demo configured for M.S. Ramaiah University. Click MSRUAS to view full pathways!')" class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition cursor-pointer group">
+            <div class="flex items-start gap-4 mb-4">
+              <div class="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 text-2xl font-bold flex-shrink-0">
+                <i class="fa-solid fa-building"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 group-hover:text-blue-600 transition text-base leading-snug">
+                  BMS College of Engineering (BMSCE)
+                </h4>
+                <p class="text-xs text-slate-500 flex items-center gap-1 mt-1">
+                  <i class="fa-solid fa-location-dot text-rose-500"></i> Bull Temple Road, Bengaluru
+                </p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 mb-4">
+              Pioneer institution in technical education with active alumni network in Silicon Valley and India.
+            </p>
+            <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-500">
+              <span>12 Alumni Profiles</span>
+              <span class="text-slate-400 font-medium group-hover:text-blue-600 flex items-center gap-1">
+                View <i class="fa-solid fa-arrow-right text-xs"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- VIEW 2: ALUMNI DIRECTORY (MSRUAS VIEW) -->
+    <section id="view-alumni" class="space-y-6 hidden">
+      <!-- MSRUAS HEADER CARD -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <button onclick="switchView('college-selection')" class="p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition text-sm flex items-center justify-center">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900">M.S. Ramaiah University of Applied Sciences</h2>
+              <span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">Verified Hub</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Explore verified alumni face cards & step-by-step B.Tech life roadmaps</p>
+          </div>
+        </div>
+
+        <!-- Filter Badges -->
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="text-slate-400 font-medium mr-1">Filter Domain:</span>
+          <button onclick="filterAlumniDomain('all')" class="domain-btn active bg-blue-600 text-white px-3 py-1.5 rounded-lg font-medium transition">All Domains</button>
+          <button onclick="filterAlumniDomain('Data')" class="domain-btn bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 px-3 py-1.5 rounded-lg font-medium transition">Data Analytics</button>
+          <button onclick="filterAlumniDomain('SDE')" class="domain-btn bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 px-3 py-1.5 rounded-lg font-medium transition">Software Eng (SDE)</button>
+          <button onclick="filterAlumniDomain('Product')" class="domain-btn bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 px-3 py-1.5 rounded-lg font-medium transition">Product / Biz</button>
+        </div>
+      </div>
+
+      <!-- ALUMNI CARDS GRID -->
+      <div id="alumni-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- CARD 1: Priya Sharma (Data Analyst) -->
+        <div class="alumni-card data-card bg-white rounded-2xl border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+          <div>
+            <!-- Top Banner/Avatar header -->
+            <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-20 relative p-4">
+              <span class="absolute top-3 right-3 bg-black/30 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
+                Batch of 2023
+              </span>
+            </div>
+            <div class="px-6 pt-0 pb-4 relative">
+              <div class="flex justify-between items-end -mt-10 mb-3">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80" alt="Priya Sharma" class="w-20 h-20 rounded-2xl border-4 border-white object-cover shadow-md">
+                <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-lg border border-amber-200 flex items-center gap-1">
+                  <i class="fa-solid fa-chart-line text-xs"></i> Data Analyst
+                </span>
+              </div>
+
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">Priya Sharma</h3>
+              <p class="text-xs text-slate-600 font-medium">Data Analyst @ <span class="text-slate-800 font-semibold">Fractal Analytics</span></p>
+              <p class="text-xs text-slate-400">B.Tech CSE (MSRUAS)</p>
+
+              <!-- Highlights Pill list -->
+              <div class="mt-4 space-y-2 text-xs">
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-brands fa-python text-blue-500"></i> Primary Tech:</span>
+                  <span class="font-semibold text-slate-800">Python, SQL, Tableau</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-code text-indigo-500"></i> DSA / SQL Practice:</span>
+                  <span class="font-semibold text-slate-800">20+ Core DSA & SQL Problems</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-comments text-emerald-500"></i> Soft Skills:</span>
+                  <span class="font-semibold text-slate-800">Average / Conversational</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Button -->
+          <div class="p-4 bg-slate-50 border-t border-slate-100">
+            <button onclick="openAlumniModal('priya')" class="w-full bg-slate-900 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+              <span>View B.Tech Roadmap & Story</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 2: Rahul Verma (SDE) -->
+        <div class="alumni-card sde-card bg-white rounded-2xl border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+          <div>
+            <!-- Top Banner/Avatar header -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 h-20 relative p-4">
+              <span class="absolute top-3 right-3 bg-black/30 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
+                Batch of 2022
+              </span>
+            </div>
+            <div class="px-6 pt-0 pb-4 relative">
+              <div class="flex justify-between items-end -mt-10 mb-3">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Rahul Verma" class="w-20 h-20 rounded-2xl border-4 border-white object-cover shadow-md">
+                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-1 rounded-lg border border-blue-200 flex items-center gap-1">
+                  <i class="fa-solid fa-laptop-code text-xs"></i> SDE-1
+                </span>
+              </div>
+
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">Rahul Verma</h3>
+              <p class="text-xs text-slate-600 font-medium">Software Engineer @ <span class="text-slate-800 font-semibold">Amazon India</span></p>
+              <p class="text-xs text-slate-400">B.Tech ECE (MSRUAS)</p>
+
+              <!-- Highlights Pill list -->
+              <div class="mt-4 space-y-2 text-xs">
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-brands fa-java text-red-500"></i> Primary Tech:</span>
+                  <span class="font-semibold text-slate-800">Java, C++, Spring Boot</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-code text-indigo-500"></i> DSA Solved:</span>
+                  <span class="font-semibold text-slate-800">250+ LeetCode / GFG</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-comments text-emerald-500"></i> Soft Skills:</span>
+                  <span class="font-semibold text-slate-800">Strong Technical Comm</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Button -->
+          <div class="p-4 bg-slate-50 border-t border-slate-100">
+            <button onclick="openAlumniModal('rahul')" class="w-full bg-slate-900 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+              <span>View B.Tech Roadmap & Story</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 3: Ananya Hegde (Product Manager / Biz Analyst) -->
+        <div class="alumni-card product-card bg-white rounded-2xl border border-slate-200 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+          <div>
+            <!-- Top Banner/Avatar header -->
+            <div class="bg-gradient-to-r from-purple-600 to-pink-600 h-20 relative p-4">
+              <span class="absolute top-3 right-3 bg-black/30 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
+                Batch of 2023
+              </span>
+            </div>
+            <div class="px-6 pt-0 pb-4 relative">
+              <div class="flex justify-between items-end -mt-10 mb-3">
+                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80" alt="Ananya Hegde" class="w-20 h-20 rounded-2xl border-4 border-white object-cover shadow-md">
+                <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-1 rounded-lg border border-purple-200 flex items-center gap-1">
+                  <i class="fa-solid fa-cubes text-xs"></i> APM / Product
+                </span>
+              </div>
+
+              <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">Ananya Hegde</h3>
+              <p class="text-xs text-slate-600 font-medium">Associate Product Manager @ <span class="text-slate-800 font-semibold">Swiggy</span></p>
+              <p class="text-xs text-slate-400">B.Tech CSE (MSRUAS)</p>
+
+              <!-- Highlights Pill list -->
+              <div class="mt-4 space-y-2 text-xs">
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-pen-nib text-purple-500"></i> Primary Tech:</span>
+                  <span class="font-semibold text-slate-800">Figma, SQL, Agile, Analytics</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-code text-indigo-500"></i> DSA / Logic:</span>
+                  <span class="font-semibold text-slate-800">Basic DSA (15+ Logic Qs)</span>
+                </div>
+                <div class="flex items-center justify-between text-slate-600 bg-slate-50 p-2 rounded-lg">
+                  <span class="flex items-center gap-1.5"><i class="fa-solid fa-bullhorn text-pink-500"></i> Soft Skills:</span>
+                  <span class="font-semibold text-slate-800">Advanced Leadership & Comm</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Button -->
+          <div class="p-4 bg-slate-50 border-t border-slate-100">
+            <button onclick="openAlumniModal('ananya')" class="w-full bg-slate-900 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+              <span>View B.Tech Roadmap & Story</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- DETAILED ALUMNI ROADMAP MODAL CONTAINER -->
+  <div id="alumni-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm hidden p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-scaleUp my-auto">
+      
+      <!-- Modal Header -->
+      <div class="bg-slate-900 text-white p-6 relative flex-shrink-0 flex items-start justify-between">
+        <div class="flex items-center gap-4">
+          <img id="modal-avatar" src="" alt="" class="w-16 h-16 rounded-2xl object-cover border-2 border-blue-400 shadow-md">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="modal-name" class="text-xl font-bold text-white"></h3>
+              <span id="modal-badge" class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[11px] font-semibold px-2.5 py-0.5 rounded-full"></span>
+            </div>
+            <p id="modal-role-company" class="text-xs text-slate-300 font-medium mt-0.5"></p>
+            <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-1">
+              <i class="fa-solid fa-graduation-cap"></i> M.S. Ramaiah University of Applied Sciences (MSRUAS)
+            </p>
+          </div>
+        </div>
+        <button onclick="closeAlumniModal()" class="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-9 h-9 rounded-full flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-6 overflow-y-auto space-y-6 text-slate-700 text-sm">
+        
+        <!-- Summary Stats Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div>
+            <span class="block text-[11px] text-slate-500 font-medium uppercase">Entry Route</span>
+            <span id="modal-entry-route" class="font-semibold text-slate-800 text-xs"></span>
+          </div>
+          <div>
+            <span class="block text-[11px] text-slate-500 font-medium uppercase">Primary Tech</span>
+            <span id="modal-tech-stack" class="font-semibold text-slate-800 text-xs"></span>
+          </div>
+          <div>
+            <span class="block text-[11px] text-slate-500 font-medium uppercase">DSA / Practice</span>
+            <span id="modal-dsa-count" class="font-semibold text-slate-800 text-xs"></span>
+          </div>
+          <div>
+            <span class="block text-[11px] text-slate-500 font-medium uppercase">Communication</span>
+            <span id="modal-comm-level" class="font-semibold text-slate-800 text-xs"></span>
+          </div>
+        </div>
+
+        <!-- SECTION: B.TECH YEAR-BY-YEAR ROADMAP -->
+        <div>
+          <h4 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-timeline text-blue-600"></i> B.Tech Year-by-Year Action Roadmap
+          </h4>
+          <div class="space-y-3 relative border-l-2 border-blue-100 pl-4 ml-2">
+            
+            <div class="relative">
+              <div class="absolute -left-[23px] top-1 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white"></div>
+              <h5 class="font-bold text-xs text-blue-600 uppercase">1st Year: Foundations & Exploration</h5>
+              <p id="modal-roadmap-y1" class="text-xs text-slate-600 mt-1 leading-relaxed"></p>
+            </div>
+
+            <div class="relative">
+              <div class="absolute -left-[23px] top-1 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white"></div>
+              <h5 class="font-bold text-xs text-blue-600 uppercase">2nd Year: Core Tech & Skill Building</h5>
+              <p id="modal-roadmap-y2" class="text-xs text-slate-600 mt-1 leading-relaxed"></p>
+            </div>
+
+            <div class="relative">
+              <div class="absolute -left-[23px] top-1 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white"></div>
+              <h5 class="font-bold text-xs text-blue-600 uppercase">3rd Year: Projects, Practice & Portfolio</h5>
+              <p id="modal-roadmap-y3" class="text-xs text-slate-600 mt-1 leading-relaxed"></p>
+            </div>
+
+            <div class="relative">
+              <div class="absolute -left-[23px] top-1 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white"></div>
+              <h5 class="font-bold text-xs text-blue-600 uppercase">4th Year: Placement Drive, Interviews & Offer</h5>
+              <p id="modal-roadmap-y4" class="text-xs text-slate-600 mt-1 leading-relaxed"></p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SECTION: TECHNICAL & PROGRAMMING LANGUAGE DETAILS -->
+        <div class="bg-blue-50/60 p-4 rounded-2xl border border-blue-100">
+          <h4 class="text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-code text-blue-600"></i> Technical Preparation & Programming Focus
+          </h4>
+          <p id="modal-tech-details" class="text-xs text-slate-700 leading-relaxed"></p>
+        </div>
+
+        <!-- SECTION: SOFT SKILLS & COMMUNICATION -->
+        <div class="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-100">
+          <h4 class="text-sm font-bold text-emerald-900 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-comments text-emerald-600"></i> Soft Skills & Communication Strategy
+          </h4>
+          <p id="modal-softskills-details" class="text-xs text-slate-700 leading-relaxed"></p>
+        </div>
+
+        <!-- SECTION: RECOMMENDED RESOURCES & REFERRAL TIP -->
+        <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-100">
+          <h4 class="text-sm font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-lightbulb text-amber-600"></i> Advice, Key Resources & Referral Strategy
+          </h4>
+          <p id="modal-resources-details" class="text-xs text-slate-700 leading-relaxed"></p>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex-shrink-0 flex items-center justify-between">
+        <span class="text-xs text-slate-500">Prototype Data - Curated from MSRUAS Placement Network</span>
+        <button onclick="closeAlumniModal()" class="bg-slate-900 text-white hover:bg-slate-800 text-xs px-5 py-2 rounded-xl font-medium transition">
+          Close Window
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- HELP / ABOUT MODAL -->
+  <div id="help-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm hidden p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-lg text-slate-900">About Career Compass</h3>
+        <button onclick="closeHelpModal()" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        This single-page prototype web application demonstrates career guidance workflows based on real college alumni pathways.
+      </p>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        <strong>Flow:</strong> Choose a university (e.g., M.S. Ramaiah University of Applied Sciences), browse verified alumni face cards, and click to reveal their year-by-year B.Tech journey, technical skills, DSA counts, and communication tips.
+      </p>
+      <button onclick="closeHelpModal()" class="w-full bg-blue-600 text-white font-medium py-2 rounded-xl text-xs transition">
+        Got it!
+      </button>
+    </div>
+  </div>
+
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-50">
+    <i class="fa-solid fa-circle-info text-blue-400"></i>
+    <span id="toast-message">Notification message</span>
+  </div>
+
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4">
+      <p>© 2026 CareerCompass | Interactive Prototype for MSRUAS & Partner Colleges</p>
+    </div>
+  </footer>
+
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Detailed Data Store for MSRUAS Alumni
+    const alumniData = {
+      priya: {
+        name: "Priya Sharma",
+        role: "Data Analyst",
+        company: "Fractal Analytics",
+        batch: "Batch of 2023",
+        avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+        entryRoute: "Campus Placement",
+        techStack: "Python, SQL, Tableau, Pandas",
+        dsaCount: "20+ Core DSA & SQL Problems",
+        commLevel: "Average / Conversational English",
+        roadmap: {
+          y1: "Learned Basic C programming and engineering mathematics in 1st year at MSRUAS. Focused on getting comfortable with basic computer logic.",
+          y2: "Shifted focus towards Python. Learned object-oriented programming, data structures (arrays, hash maps), and fundamental SQL queries.",
+          y3: "Built 2 core data projects: Customer Churn Prediction and E-commerce EDA using Python, Pandas, and Tableau. Practiced ~20 standard SQL and data manipulation problems.",
+          y4: "Prepared for campus drive. Focused on SQL joins, window functions, basic puzzle questions, and aptitude test practice. Cracked Fractal Analytics on-campus."
+        },
+        techDetails: "Learned <strong>Python</strong> as primary scripting language along with <strong>SQL</strong> for relational databases. Solved ~20 target problems covering SQL Joins, Aggregations, Group By, and basic Data Structure array/string logic on platforms like HackerRank.",
+        softSkillsDetails: "Maintained <strong>Average / Conversational English</strong>. Focused on clear, simple explanations during the interview. Practiced answering 'Tell me about yourself' and explaining project dashboards clearly without over-complicating technical jargon.",
+        resourcesDetails: "Recommended resources: <em>SQLZoo, Kaggle Datasets, and Alex The Analyst YouTube channel</em>. Strategy: Prepare 2 solid projects and understand every line of code on your resume."
+      },
+      rahul: {
+        name: "Rahul Verma",
+        role: "Software Development Engineer (SDE-1)",
+        company: "Amazon India",
+        batch: "Batch of 2022",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+        entryRoute: "Off-Campus / Employee Referral",
+        techStack: "Java, C++, Spring Boot, AWS",
+        dsaCount: "250+ LeetCode / GeeksForGeeks",
+        commLevel: "Strong Technical Communication",
+        roadmap: {
+          y1: "Focused on C++ fundamentals, OOPs concepts, and maintaining a high CGPA (>8.5) in MSRUAS first-year coursework.",
+          y2: "Mastered Data Structures & Algorithms in Java. Started solving LeetCode Easy/Medium problems consistently every weekend.",
+          y3: "Built full-stack backend microservices using Java Spring Boot. Solved over 180+ DSA questions and participated in CodeChef contests.",
+          y4: "Applied via an Amazon employee referral on LinkedIn. Solved 250+ total DSA problems, cleared OA (Online Assessment), and 3 technical rounds."
+        },
+        techDetails: "Core focus was <strong>Java and C++</strong>. Solved <strong>250+ DSA problems</strong> (Trees, Graphs, Dynamic Programming, Binary Search). Deep understanding of Object-Oriented Design (OOD) and System Design basics.",
+        softSkillsDetails: "Good technical communication. STAR method used for behavioral leadership principles. Clear diagramming skills during whiteboard system rounds.",
+        resourcesDetails: "Recommended resources: <em>Striver's SDE Sheet, NeetCode 150, and System Design Primer</em>. Tip: Ask for LinkedIn referrals with a concise message highlighting your top LeetCode stats."
+      },
+      ananya: {
+        name: "Ananya Hegde",
+        role: "Associate Product Manager (APM)",
+        company: "Swiggy",
+        batch: "Batch of 2023",
+        avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80",
+        entryRoute: "Off-Campus APM Cohort",
+        techStack: "Figma, SQL, Mixpanel, Agile",
+        dsaCount: "15+ Basic Logic & Analytical Qs",
+        commLevel: "Advanced / High Presentation Skill",
+        roadmap: {
+          y1: "Active member of MSRUAS E-Cell and Student Council. Developed strong interpersonal and event management skills.",
+          y2: "Learned UI/UX design wireframing in Figma and foundational SQL for product analytics. Conducted user research for college fests.",
+          y3: "Completed a 3-month Product Management virtual internship. Built Product Requirement Documents (PRDs) for local delivery apps.",
+          y4: "Participated in Swiggy APM challenge & product teardown contest. Cleared product case study rounds, GTM strategy, and executive interview."
+        },
+        techDetails: "Combination of <strong>SQL for analytics</strong> and <strong>Figma for product wireframes</strong>. Focused on basic algorithmic thinking (solved ~15 logic/analytical puzzles) rather than heavy coding.",
+        softSkillsDetails: "<strong>Advanced communication and storytelling skills</strong>. Ability to articulate user pain points, frame root-cause analyses, and lead cross-functional discussions effortlessly.",
+        resourcesDetails: "Recommended resources: <em>'Inspired' by Marty Cagan, Product School, and Exponent Case Studies</em>. Tip: Build 1 full Product Teardown portfolio on Notion before applying."
+      }
+    };
+
+    // View Switcher Function
+    function switchView(viewName) {
+      const viewColleges = document.getElementById('view-colleges');
+      const viewAlumni = document.getElementById('view-alumni');
+      const breadcrumb = document.getElementById('breadcrumb-container');
+
+      if (viewName === 'college-selection') {
+        viewColleges.classList.remove('hidden');
+        viewAlumni.classList.add('hidden');
+        breadcrumb.classList.add('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (viewName === 'alumni-msruas') {
+        viewColleges.classList.add('hidden');
+        viewAlumni.classList.remove('hidden');
+        breadcrumb.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Select College Action
+    function selectCollege(code) {
+      if (code === 'msruas') {
+        switchView('alumni-msruas');
+        showNotification("Loaded Alumni Pathways for M.S. Ramaiah University!");
+      }
+    }
+
+    // Fetch Colleges Action
+    function fetchColleges() {
+      const section = document.getElementById('college-list-section');
+      section.scrollIntoView({ behavior: 'smooth' });
+      showNotification("Listing partner colleges...");
+    }
+
+    // Filter Colleges Search
+    function filterColleges() {
+      const query = document.getElementById('college-search').value.toLowerCase();
+      const grid = document.getElementById('colleges-grid');
+      const cards = grid.children;
+
+      Array.from(cards).forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Filter Alumni Domain Badges
+    function filterAlumniDomain(domain) {
+      // Update button styling
+      const buttons = document.querySelectorAll('.domain-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-600');
+      });
+      event.target.classList.remove('bg-white', 'text-slate-600');
+      event.target.classList.add('bg-blue-600', 'text-white');
+
+      // Filter cards
+      const cards = document.querySelectorAll('.alumni-card');
+      cards.forEach(card => {
+        if (domain === 'all') {
+          card.style.display = 'flex';
+        } else if (domain === 'Data' && card.classList.contains('data-card')) {
+          card.style.display = 'flex';
+        } else if (domain === 'SDE' && card.classList.contains('sde-card')) {
+          card.style.display = 'flex';
+        } else if (domain === 'Product' && card.classList.contains('product-card')) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Open Alumni Modal & Populate Data
+    function openAlumniModal(id) {
+      const data = alumniData[id];
+      if (!data) return;
+
+      document.getElementById('modal-avatar').src = data.avatar;
+      document.getElementById('modal-name').textContent = data.name;
+      document.getElementById('modal-badge').textContent = data.batch;
+      document.getElementById('modal-role-company').textContent = `${data.role} @ ${data.company}`;
+      
+      document.getElementById('modal-entry-route').textContent = data.entryRoute;
+      document.getElementById('modal-tech-stack').textContent = data.techStack;
+      document.getElementById('modal-dsa-count').textContent = data.dsaCount;
+      document.getElementById('modal-comm-level').textContent = data.commLevel;
+
+      document.getElementById('modal-roadmap-y1').textContent = data.roadmap.y1;
+      document.getElementById('modal-roadmap-y2').textContent = data.roadmap.y2;
+      document.getElementById('modal-roadmap-y3').textContent = data.roadmap.y3;
+      document.getElementById('modal-roadmap-y4').textContent = data.roadmap.y4;
+
+      document.getElementById('modal-tech-details').innerHTML = data.techDetails;
+      document.getElementById('modal-softskills-details').innerHTML = data.softSkillsDetails;
+      document.getElementById('modal-resources-details').innerHTML = data.resourcesDetails;
+
+      document.getElementById('alumni-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close Alumni Modal
+    function closeAlumniModal() {
+      document.getElementById('alumni-modal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Help Modal
+    function openHelpModal() {
+      document.getElementById('help-modal').classList.remove('hidden');
+    }
+    function closeHelpModal() {
+      document.getElementById('help-modal').classList.add('hidden');
+    }
+
+    // Notification Toast Helper
+    function showNotification(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = msg;
+
+      toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
